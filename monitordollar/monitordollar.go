@@ -8,7 +8,7 @@ import (
 	"math"
 	"net/http"
 
-	"github.com/jeremiasbots/currencyRatesLib/go/types"
+	"github.com/jeremiasbots/currencyRatesLib/types"
 	"github.com/shopspring/decimal"
 )
 

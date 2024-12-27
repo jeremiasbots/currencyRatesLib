@@ -1,4 +1,4 @@
-module github.com/jeremiasbots/currencyRatesLib/go
+module github.com/jeremiasbots/currencyRatesLib
 
 go 1.23.4
 

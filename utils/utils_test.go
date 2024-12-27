@@ -4,7 +4,7 @@ import (
 	"errors"
 	"testing"
 
-	"github.com/jeremiasbots/currencyRatesLib/go/utils"
+	"github.com/jeremiasbots/currencyRatesLib/utils"
 )
 
 func TestEightDecimals(t *testing.T) {

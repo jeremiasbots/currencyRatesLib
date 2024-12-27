@@ -3,8 +3,8 @@ package monitordollar_test
 import (
 	"testing"
 
-	"github.com/jeremiasbots/currencyRatesLib/go/monitordollar"
-	"github.com/jeremiasbots/currencyRatesLib/go/utils"
+	"github.com/jeremiasbots/currencyRatesLib/monitordollar"
+	"github.com/jeremiasbots/currencyRatesLib/utils"
 )
 
 func TestDollarAsString(t *testing.T) {

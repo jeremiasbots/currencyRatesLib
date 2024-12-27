@@ -3,8 +3,8 @@ package binance_test
 import (
 	"testing"
 
-	"github.com/jeremiasbots/currencyRatesLib/go/binance"
-	"github.com/jeremiasbots/currencyRatesLib/go/utils"
+	"github.com/jeremiasbots/currencyRatesLib/binance"
+	"github.com/jeremiasbots/currencyRatesLib/utils"
 )
 
 func TestStringAndBasicValue(t *testing.T) {

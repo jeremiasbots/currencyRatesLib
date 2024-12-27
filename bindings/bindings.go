@@ -9,9 +9,9 @@ import (
 	"encoding/json"
 	"unsafe"
 
-	"github.com/jeremiasbots/currencyRatesLib/go/bcv"
-	"github.com/jeremiasbots/currencyRatesLib/go/binance"
-	"github.com/jeremiasbots/currencyRatesLib/go/monitordollar"
+	"github.com/jeremiasbots/currencyRatesLib/bcv"
+	"github.com/jeremiasbots/currencyRatesLib/binance"
+	"github.com/jeremiasbots/currencyRatesLib/monitordollar"
 )
 
 //export BCVGetCurrencyValue

@@ -3,8 +3,8 @@ package bcv_test
 import (
 	"testing"
 
-	"github.com/jeremiasbots/currencyRatesLib/go/bcv"
-	"github.com/jeremiasbots/currencyRatesLib/go/utils"
+	"github.com/jeremiasbots/currencyRatesLib/bcv"
+	"github.com/jeremiasbots/currencyRatesLib/utils"
 )
 
 func TestEuroValue(t *testing.T) {
