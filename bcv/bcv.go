@@ -1,12 +1,16 @@
 package bcv
 
 import (
+	"encoding/json"
 	"errors"
 	"fmt"
+	"io"
+	"math"
 	"net/http"
 	"strings"
 
 	"github.com/PuerkitoBio/goquery"
+	"github.com/jeremiasbots/currencyRatesLib/types"
 	"github.com/shopspring/decimal"
 )
 
@@ -17,6 +21,8 @@ const (
 	Ruble
 	AmericanDollar
 )
+
+type BCVApiResponse types.APIResponse
 
 func GetCurrencyValue(currency int8) (string, error) {
 	htmlRequest, err := http.Get("https://www.bcv.org.ve/")
@@ -54,63 +60,65 @@ func GetCurrencyValue(currency int8) (string, error) {
 }
 
 func GetDollarValue() (string, error) {
-	htmlRequest, err := http.Get("https://www.bcv.org.ve/")
+	htmlRequest, err := http.Get("https://ve.dolarapi.com/v1/dolares/bitcoin")
 	if err != nil {
-		return "", errors.New(fmt.Sprintf("Error (go to https://www.bcv.org.ve/): %v", err))
+		return "", errors.New(fmt.Sprintf("Error (go to https://ve.dolarapi.com/v1/dolares/bitcoins): %v", err))
 	}
 	defer htmlRequest.Body.Close()
 	if htmlRequest.StatusCode != 200 {
 		return "", errors.New(fmt.Sprintf("htmlRequest.StatusCode error: %d %s", htmlRequest.StatusCode, htmlRequest.Status))
 	}
-	doc, docErr := goquery.NewDocumentFromReader(htmlRequest.Body)
-	if docErr != nil {
-		return "", errors.New(fmt.Sprintf("Error (html.Parse(htmlRequest.Body)): %v", docErr))
+	bodyData, readerErr := io.ReadAll(htmlRequest.Body)
+	if readerErr != nil {
+		return "", errors.New(fmt.Sprintf("io.ReadAll(htmlRequest.Body) error: %v", readerErr))
 	}
-	return strings.ReplaceAll(strings.TrimSpace(doc.Find("div #dolar div.col-sm-6.col-xs-6.centrado strong").Text()), ",", "."), nil
+	var dataResponse *BCVApiResponse
+	if jsonErr := json.Unmarshal(bodyData, &dataResponse); jsonErr != nil {
+		return "", errors.New(fmt.Sprintf("json.Unmarshal(bodyData, &dataResponse) error: %v", jsonErr))
+	}
+	roundedNumber := math.Round(dataResponse.Average*1e8) / 1e8
+	return fmt.Sprintf("%.8f", roundedNumber), nil
 }
 
 func GetDollarValueAsFloat64() (float64, error) {
-	htmlRequest, err := http.Get("https://www.bcv.org.ve/")
+	htmlRequest, err := http.Get("https://ve.dolarapi.com/v1/dolares/bitcoin")
 	if err != nil {
-		return 0.00000000, errors.New(fmt.Sprintf("Error (go to https://www.bcv.org.ve/): %v", err))
+		return 0.0, errors.New(fmt.Sprintf("Error (go to https://ve.dolarapi.com/v1/dolares/bitcoins): %v", err))
 	}
 	defer htmlRequest.Body.Close()
 	if htmlRequest.StatusCode != 200 {
-		return 0.00000000, errors.New(fmt.Sprintf("htmlRequest.StatusCode error: %d %s", htmlRequest.StatusCode, htmlRequest.Status))
+		return 0.0, errors.New(fmt.Sprintf("htmlRequest.StatusCode error: %d %s", htmlRequest.StatusCode, htmlRequest.Status))
 	}
-	doc, docErr := goquery.NewDocumentFromReader(htmlRequest.Body)
-	if docErr != nil {
-		return 0.00000000, errors.New(fmt.Sprintf("Error (html.Parse(htmlRequest.Body)): %v", docErr))
+	bodyData, readerErr := io.ReadAll(htmlRequest.Body)
+	if readerErr != nil {
+		return 0.0, errors.New(fmt.Sprintf("io.ReadAll(htmlRequest.Body) error: %v", readerErr))
 	}
-	dollarValueAsString := strings.ReplaceAll(strings.TrimSpace(doc.Find("div #dolar div.col-sm-6.col-xs-6.centrado strong").Text()), ",", ".")
-	dollarValueDecimal, decimalErr := decimal.NewFromString(dollarValueAsString)
-	if decimalErr != nil {
-		return 0.00000000, errors.New(fmt.Sprintf("Error (decimal.NewFromString): %v", decimalErr))
+	var dataResponse *BCVApiResponse
+	if jsonErr := json.Unmarshal(bodyData, &dataResponse); jsonErr != nil {
+		return 0.0, errors.New(fmt.Sprintf("json.Unmarshal(bodyData, &dataResponse) error: %v", jsonErr))
 	}
-	numberValue, _ := dollarValueDecimal.BigFloat().Float64()
-	return numberValue, nil
+	return dataResponse.Average, nil
 }
 
 func GetDollarValueAsFloat32() (float32, error) {
-	htmlRequest, err := http.Get("https://www.bcv.org.ve/")
+	htmlRequest, err := http.Get("https://ve.dolarapi.com/v1/dolares/bitcoin")
 	if err != nil {
-		return 0.00000000, errors.New(fmt.Sprintf("Error (go to https://www.bcv.org.ve/): %v", err))
+		return 0.0, errors.New(fmt.Sprintf("Error (go to https://ve.dolarapi.com/v1/dolares/bitcoins): %v", err))
 	}
 	defer htmlRequest.Body.Close()
 	if htmlRequest.StatusCode != 200 {
-		return 0.00000000, errors.New(fmt.Sprintf("htmlRequest.StatusCode error: %d %s", htmlRequest.StatusCode, htmlRequest.Status))
+		return 0.0, errors.New(fmt.Sprintf("htmlRequest.StatusCode error: %d %s", htmlRequest.StatusCode, htmlRequest.Status))
 	}
-	doc, docErr := goquery.NewDocumentFromReader(htmlRequest.Body)
-	if docErr != nil {
-		return 0.00000000, errors.New(fmt.Sprintf("Error (html.Parse(htmlRequest.Body)): %v", docErr))
+	bodyData, readerErr := io.ReadAll(htmlRequest.Body)
+	if readerErr != nil {
+		return 0.0, errors.New(fmt.Sprintf("io.ReadAll(htmlRequest.Body) error: %v", readerErr))
 	}
-	dollarValueAsString := strings.ReplaceAll(strings.TrimSpace(doc.Find("div #dolar div.col-sm-6.col-xs-6.centrado strong").Text()), ",", ".")
-	dollarValueDecimal, decimalErr := decimal.NewFromString(dollarValueAsString)
-	if decimalErr != nil {
-		return 0.00000000, errors.New(fmt.Sprintf("Error (decimal.NewFromString): %v", decimalErr))
+	var dataResponse *BCVApiResponse
+	if jsonErr := json.Unmarshal(bodyData, &dataResponse); jsonErr != nil {
+		return 0.0, errors.New(fmt.Sprintf("json.Unmarshal(bodyData, &dataResponse) error: %v", jsonErr))
 	}
-	numberValue, _ := dollarValueDecimal.BigFloat().Float32()
-	return numberValue, nil
+	averageResponse, _ := decimal.NewFromFloat(dataResponse.Average).BigFloat().Float32()
+	return averageResponse, nil
 }
 
 func GetCurrencyValueAsFloat64(currency int8) (float64, error) {
