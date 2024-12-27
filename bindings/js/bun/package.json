@@ -1,0 +1,25 @@
+{
+  "name": "currencyrateslib-bun",
+  "version": "0.0.1",
+  "module": "build/index.js",
+  "types": "build/index.d.ts",
+  "type": "module",
+  "devDependencies": {
+    "@biomejs/biome": "1.9.4",
+    "@types/bun": "latest"
+  },
+  "peerDependencies": {
+    "typescript": "^5.0.0"
+  },
+  "author": {
+    "name": "devep/jeremiasbots",
+    "email": "devepservices@gmail.com"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/jeremiasbots/currencyRatesLib"
+  },
+  "publishConfig": {
+    "access": "public"
+  }
+}

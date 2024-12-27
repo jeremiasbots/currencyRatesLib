@@ -1,0 +1,8 @@
+*.ts
+tsconfig.json
+classes/
+enums/
+types/
+.gitignore
+*.test.ts
+biome.json
