@@ -1,7 +1,6 @@
 package binance_test
 
 import (
-	"fmt"
 	"testing"
 
 	"github.com/jeremiasbots/currencyRatesLib/go/binance"
@@ -19,12 +18,16 @@ func TestStringAndBasicValue(t *testing.T) {
 }
 
 func TestDollarValueAsFloat64(t *testing.T) {
-	dollarValue, err := binance.GetDollarValueAsFloat64()
+	_, err := binance.GetDollarValueAsFloat64()
 	if err != nil {
 		t.Error(err)
 	}
-	if !utils.HasEightDecimals(fmt.Sprintf("%.8f", dollarValue)) {
-		t.Errorf("The value does not have eight decimal places: %.8f", dollarValue)
+}
+
+func TestDollarValueAsFloat32(t *testing.T) {
+	_, err := binance.GetDollarValueAsFloat32()
+	if err != nil {
+		t.Error(err)
 	}
 }
 

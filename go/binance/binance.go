@@ -9,6 +9,7 @@ import (
 	"net/http"
 
 	"github.com/jeremiasbots/currencyRatesLib/go/types"
+	"github.com/shopspring/decimal"
 )
 
 type BinanceAPIResponse types.APIResponse
@@ -51,8 +52,28 @@ func GetDollarValueAsFloat64() (float64, error) {
 	if jsonErr := json.Unmarshal(bodyData, &dataResponse); jsonErr != nil {
 		return 0.00000000, errors.New(fmt.Sprintf("json.Unmarshal(bodyData, &dataResponse) error: %v", jsonErr))
 	}
-	roundedNumber := math.Round(dataResponse.Average*1e8) / 1e8
-	return roundedNumber, nil
+	return dataResponse.Average, nil
+}
+
+func GetDollarValueAsFloat32() (float32, error) {
+	htmlRequest, err := http.Get("https://ve.dolarapi.com/v1/dolares/bitcoin")
+	if err != nil {
+		return 0.00000000, errors.New(fmt.Sprintf("Error (go to https://ve.dolarapi.com/v1/dolares/bitcoins): %v", err))
+	}
+	defer htmlRequest.Body.Close()
+	if htmlRequest.StatusCode != 200 {
+		return 0.00000000, errors.New(fmt.Sprintf("htmlRequest.StatusCode error: %d %s", htmlRequest.StatusCode, htmlRequest.Status))
+	}
+	bodyData, readerErr := io.ReadAll(htmlRequest.Body)
+	if readerErr != nil {
+		return 0.00000000, errors.New(fmt.Sprintf("io.ReadAll(htmlRequest.Body) error: %v", readerErr))
+	}
+	var dataResponse *BinanceAPIResponse
+	if jsonErr := json.Unmarshal(bodyData, &dataResponse); jsonErr != nil {
+		return 0.00000000, errors.New(fmt.Sprintf("json.Unmarshal(bodyData, &dataResponse) error: %v", jsonErr))
+	}
+	finalNumber, _ := decimal.NewFromFloat(dataResponse.Average).BigFloat().Float32()
+	return finalNumber, nil
 }
 
 func GetDollarData() (BinanceAPIResponse, error) {

@@ -9,3 +9,10 @@ func HasEightDecimals(value string) bool {
 	}
 	return false
 }
+
+func ErrAsNil(err error) string {
+	if err == nil {
+		return "null"
+	}
+	return err.Error()
+}
