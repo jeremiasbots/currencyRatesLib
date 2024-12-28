@@ -10,6 +10,10 @@ export default class BasePackage {
             args: never[];
             returns: FFIType.ptr;
         };
+        BCVGetDollarData: {
+            args: never[];
+            returns: FFIType.ptr;
+        };
         BinanceGetDollarValue: {
             args: never[];
             returns: FFIType.ptr;

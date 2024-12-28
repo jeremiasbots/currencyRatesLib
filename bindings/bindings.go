@@ -77,6 +77,20 @@ func BCVGetDollarValueAsFloat() C.float {
 	return valueCDouble
 }
 
+//export BCVGetDollarData
+func BCVGetDollarData() *C.char {
+	value, err := bcv.GetDollarData()
+	if err != nil {
+		panic(err)
+	}
+	jsonValue, jsonErr := json.Marshal(value)
+	if jsonErr != nil {
+		panic(jsonErr)
+	}
+	valueCString := C.CString(string(jsonValue))
+	return valueCString
+}
+
 //export BinanceGetDollarValue
 func BinanceGetDollarValue() *C.char {
 	value, err := binance.GetDollarValue()

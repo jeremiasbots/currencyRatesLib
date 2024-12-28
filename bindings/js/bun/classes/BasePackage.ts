@@ -13,6 +13,10 @@ export default class BasePackage {
 				args: [],
 				returns: FFIType.ptr,
 			},
+			BCVGetDollarData: {
+				args: [],
+				returns: FFIType.ptr
+			},
 			BinanceGetDollarValue: {
 				args: [],
 				returns: FFIType.ptr,

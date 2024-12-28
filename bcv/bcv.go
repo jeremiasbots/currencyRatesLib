@@ -60,9 +60,9 @@ func GetCurrencyValue(currency int8) (string, error) {
 }
 
 func GetDollarValue() (string, error) {
-	htmlRequest, err := http.Get("https://ve.dolarapi.com/v1/dolares/bitcoin")
+	htmlRequest, err := http.Get("https://ve.dolarapi.com/v1/dolares/oficial")
 	if err != nil {
-		return "", errors.New(fmt.Sprintf("Error (go to https://ve.dolarapi.com/v1/dolares/bitcoins): %v", err))
+		return "", errors.New(fmt.Sprintf("Error (go to https://ve.dolarapi.com/v1/dolares/oficial): %v", err))
 	}
 	defer htmlRequest.Body.Close()
 	if htmlRequest.StatusCode != 200 {
@@ -80,10 +80,30 @@ func GetDollarValue() (string, error) {
 	return fmt.Sprintf("%.8f", roundedNumber), nil
 }
 
-func GetDollarValueAsFloat64() (float64, error) {
-	htmlRequest, err := http.Get("https://ve.dolarapi.com/v1/dolares/bitcoin")
+func GetDollarData() (BCVApiResponse, error) {
+	htmlRequest, err := http.Get("https://ve.dolarapi.com/v1/dolares/oficial")
 	if err != nil {
-		return 0.0, errors.New(fmt.Sprintf("Error (go to https://ve.dolarapi.com/v1/dolares/bitcoins): %v", err))
+		return BCVApiResponse{}, errors.New(fmt.Sprintf("Error (go to https://ve.dolarapi.com/v1/dolares/oficial): %v", err))
+	}
+	defer htmlRequest.Body.Close()
+	if htmlRequest.StatusCode != 200 {
+		return BCVApiResponse{}, errors.New(fmt.Sprintf("htmlRequest.StatusCode error: %d %s", htmlRequest.StatusCode, htmlRequest.Status))
+	}
+	bodyData, readerErr := io.ReadAll(htmlRequest.Body)
+	if readerErr != nil {
+		return BCVApiResponse{}, errors.New(fmt.Sprintf("io.ReadAll(htmlRequest.Body) error: %v", readerErr))
+	}
+	var dataResponse *BCVApiResponse
+	if jsonErr := json.Unmarshal(bodyData, &dataResponse); jsonErr != nil {
+		return BCVApiResponse{}, errors.New(fmt.Sprintf("json.Unmarshal(bodyData, &dataResponse) error: %v", jsonErr))
+	}
+	return *dataResponse, nil
+}
+
+func GetDollarValueAsFloat64() (float64, error) {
+	htmlRequest, err := http.Get("https://ve.dolarapi.com/v1/dolares/oficial")
+	if err != nil {
+		return 0.0, errors.New(fmt.Sprintf("Error (go to https://ve.dolarapi.com/v1/dolares/oficial): %v", err))
 	}
 	defer htmlRequest.Body.Close()
 	if htmlRequest.StatusCode != 200 {
@@ -101,9 +121,9 @@ func GetDollarValueAsFloat64() (float64, error) {
 }
 
 func GetDollarValueAsFloat32() (float32, error) {
-	htmlRequest, err := http.Get("https://ve.dolarapi.com/v1/dolares/bitcoin")
+	htmlRequest, err := http.Get("https://ve.dolarapi.com/v1/dolares/oficial")
 	if err != nil {
-		return 0.0, errors.New(fmt.Sprintf("Error (go to https://ve.dolarapi.com/v1/dolares/bitcoins): %v", err))
+		return 0.0, errors.New(fmt.Sprintf("Error (go to https://ve.dolarapi.com/v1/dolares/oficial): %v", err))
 	}
 	defer htmlRequest.Body.Close()
 	if htmlRequest.StatusCode != 200 {
